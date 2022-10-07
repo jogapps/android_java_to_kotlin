@@ -10,32 +10,19 @@ import android.view.View
 import androidx.appcompat.widget.Toolbar
 import com.sriyank.javatokotlindemo.app.Constants
 
+import kotlinx.android.synthetic.main.activity_main.*;
+
 class MainActivity : AppCompatActivity() {
-    private var etName: EditText? = null
-    private var etGithubRepoName: EditText? = null
-    private var etLanguage: EditText? = null
-    private var etGithubUser: EditText? = null
-    private var inputLayoutName: TextInputLayout? = null
-    private var inputLayoutRepoName: TextInputLayout? = null
-    private var inputLayoutGithubUser: TextInputLayout? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        etName = findViewById(R.id.etName)
-        etGithubRepoName = findViewById(R.id.etRepoName)
-        etLanguage = findViewById(R.id.etLanguage)
-        etGithubUser = findViewById(R.id.etGithubUser)
-        inputLayoutName = findViewById(R.id.inputLayoutName)
-        inputLayoutRepoName = findViewById(R.id.inputLayoutRepoName)
-        inputLayoutGithubUser = findViewById(R.id.inputLayoutGithubUser)
     }
 
     /** Save app username in SharedPreferences  */
     fun saveName(view: View?) {
         if (isNotEmpty(etName, inputLayoutName)) {
-            val personName = etName!!.text.toString()
+            val personName = etName.text.toString()
             val sp = getSharedPreferences(Constants.APP_SHARED_PREFERENCES, MODE_PRIVATE)
             val editor = sp.edit()
             editor.putString(Constants.KEY_PERSON_NAME, personName)
@@ -45,8 +32,8 @@ class MainActivity : AppCompatActivity() {
 
     /** Search repositories on github  */
     fun listRepositories(view: View?) {
-        if (isNotEmpty(etGithubRepoName, inputLayoutRepoName)) {
-            val queryRepo = etGithubRepoName!!.text.toString()
+        if (isNotEmpty(etRepoName, inputLayoutRepoName)) {
+            val queryRepo = etRepoName!!.text.toString()
             val repoLanguage = etLanguage!!.text.toString()
             val intent = Intent(this@MainActivity, DisplayActivity::class.java)
             intent.putExtra(Constants.KEY_QUERY_TYPE, Constants.SEARCH_BY_REPO)
