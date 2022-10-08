@@ -29,7 +29,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var displayAdapter: DisplayAdapter
     private var browsedRepositories: List<Repository> = mutableListOf()
     private val githubAPIService: GithubAPIService by lazy {
-        RetrofitClient.getGithubAPIService()
+        RetrofitClient.githubAPIService
     }
     private var mRealm: Realm? = null
 
@@ -75,7 +75,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     private fun fetchUserRepositories(githubUser: String?) {
         githubAPIService.searchRepositoriesByUser(githubUser)
-            .enqueue(object : Callback<List<Repository?>?> {
+            ?.enqueue(object : Callback<List<Repository?>?> {
                 override fun onResponse(
                     call: Call<List<Repository?>?>,
                     response: Response<List<Repository?>?>
@@ -91,12 +91,12 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                         else Util.showMessage(this@DisplayActivity, "No Items Found")
                     } else {
                         Log.i(TAG, "Error $response")
-                        Util.showErrorMessage(this@DisplayActivity, response.errorBody())
+                        Util.showErrorMessage(this@DisplayActivity, response.errorBody()!!)
                     }
                 }
 
                 override fun onFailure(call: Call<List<Repository?>?>, t: Throwable) {
-                    Util.showMessage(this@DisplayActivity, t.message)
+                    Util.showMessage(this@DisplayActivity, t.message ?: "Error Fetching Results")
                 }
             })
     }
@@ -106,12 +106,12 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val query: MutableMap<String, String?> = HashMap()
         if (repoLanguage != null && !repoLanguage.isEmpty()) queryRepo += " language:$repoLanguage"
         query["q"] = queryRepo
-        githubAPIService.searchRepositories(query).enqueue(object : Callback<SearchResponse> {
+        githubAPIService.searchRepositories(query)?.enqueue(object : Callback<SearchResponse> {
             override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
                 if (response.isSuccessful) {
                     Log.i(TAG, "posts loaded from API $response")
                     response.body()?.let {
-                        browsedRepositories = it.items
+                        browsedRepositories = it.items!!
                     }
                     // browsedRepositories = response.body()!!.items
 
@@ -120,7 +120,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     else Util.showMessage(this@DisplayActivity,"No Items Found")
                 } else {
                     Log.i(TAG, "error $response")
-                    Util.showErrorMessage(this@DisplayActivity, response.errorBody())
+                    Util.showErrorMessage(this@DisplayActivity, response.errorBody()!!)
                 }
             }
 
@@ -178,4 +178,8 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     companion object {
         private val TAG = DisplayActivity::class.java.simpleName
     }
+}
+
+private fun <T> Call<T>?.enqueue(callback: Callback<SearchResponse>) {
+
 }
