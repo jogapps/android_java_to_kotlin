@@ -147,7 +147,7 @@ class DisplayActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         return true
     }
 
-    private fun consumeMenuEvent(myFunc: () -> Unit, title: String) {
+    private inline fun consumeMenuEvent(myFunc: () -> Unit, title: String) {
         myFunc()
         closeDrawer()
         supportActionBar!!.title = title

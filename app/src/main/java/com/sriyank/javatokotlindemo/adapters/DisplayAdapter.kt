@@ -10,7 +10,6 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.view.View
-import com.sriyank.javatokotlindemo.app.Util
 import com.sriyank.javatokotlindemo.app.toast
 import com.sriyank.javatokotlindemo.models.Repository
 import io.realm.Realm
@@ -55,12 +54,14 @@ class DisplayAdapter(context: Context, items: List<Repository>) :
         }
 
         private fun bookmarkRepository(current: Repository?) {
-            val realm = Realm.getDefaultInstance()
-            realm.executeTransactionAsync(
-                { realm -> realm.copyToRealmOrUpdate(current) },
-                { context.toast("Bookmarked Successfully") }) { error ->
-                Log.i(TAG, error.toString())
-                context.toast("Error Occurred")
+            current?.let {
+                val realm = Realm.getDefaultInstance()
+                realm.executeTransactionAsync(
+                    { realm -> realm.copyToRealmOrUpdate(current) },
+                    { context.toast("Bookmarked Successfully") }) { error ->
+                    Log.i(TAG, error.toString())
+                    context.toast("Error Occurred")
+                }
             }
         }
 
