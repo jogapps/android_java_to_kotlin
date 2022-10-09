@@ -9,6 +9,7 @@ import android.content.Intent
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import com.sriyank.javatokotlindemo.app.Constants
+import com.sriyank.javatokotlindemo.app.isNotEmpty
 
 import kotlinx.android.synthetic.main.activity_main.*;
 
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     /** Save app username in SharedPreferences  */
     fun saveName(view: View?) {
-        if (isNotEmpty(etName, inputLayoutName)) {
+        if (etName.isNotEmpty(inputLayoutName)) {
             val personName = etName.text.toString()
             val sp = getSharedPreferences(Constants.APP_SHARED_PREFERENCES, MODE_PRIVATE)
             val editor = sp.edit()
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     /** Search repositories on github  */
     fun listRepositories(view: View?) {
-        if (isNotEmpty(etRepoName, inputLayoutRepoName)) {
+        if (etRepoName.isNotEmpty(inputLayoutRepoName)) {
             val queryRepo = etRepoName!!.text.toString()
             val repoLanguage = etLanguage!!.text.toString()
             val intent = Intent(this@MainActivity, DisplayActivity::class.java)
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     /** Search repositories of a particular github user  */
     fun listUserRepositories(view: View?) {
-        if (isNotEmpty(etGithubUser, inputLayoutGithubUser)) {
+        if (etGithubUser.isNotEmpty(inputLayoutGithubUser)) {
             val githubUser = etGithubUser!!.text.toString()
             val intent = Intent(this@MainActivity, DisplayActivity::class.java)
             intent.putExtra(Constants.KEY_QUERY_TYPE, Constants.SEARCH_BY_USER)
@@ -55,15 +56,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** Validation  */
-    private fun isNotEmpty(editText: EditText?, textInputLayout: TextInputLayout?): Boolean {
-        return if (editText!!.text.toString().isEmpty()) {
-            textInputLayout!!.error = "Cannot be blank !"
-            false
-        } else {
-            textInputLayout!!.isErrorEnabled = false
-            true
-        }
-    }
 
     companion object {
         private val TAG = MainActivity::class.java.simpleName

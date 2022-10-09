@@ -11,6 +11,7 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import com.sriyank.javatokotlindemo.app.Util
+import com.sriyank.javatokotlindemo.app.toast
 import com.sriyank.javatokotlindemo.models.Repository
 import io.realm.Realm
 import kotlinx.android.synthetic.main.list_item.view.*
@@ -32,7 +33,7 @@ class DisplayAdapter(context: Context, items: List<Repository>) :
     override fun getItemCount(): Int = repositoryList.size
 
     fun swap(dataList: List<Repository>) {
-        if (dataList.isEmpty()) Util.showMessage(context, "No Items Found")
+        if (dataList.isEmpty()) context.toast("No Items Found")
         repositoryList = dataList
         notifyDataSetChanged()
     }
@@ -57,9 +58,9 @@ class DisplayAdapter(context: Context, items: List<Repository>) :
             val realm = Realm.getDefaultInstance()
             realm.executeTransactionAsync(
                 { realm -> realm.copyToRealmOrUpdate(current) },
-                { Util.showMessage(context, "Bookmarked Successfully") }) { error ->
+                { context.toast("Bookmarked Successfully") }) { error ->
                 Log.i(TAG, error.toString())
-                Util.showMessage(context, "Error Occurred")
+                context.toast("Error Occurred")
             }
         }
 
